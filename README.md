@@ -1,7 +1,7 @@
 Liara
 =============
 
-Provies essential tools for LAMP stack development via Ansible.
+Provides essential tools for LAMP stack development via Ansible.
 
 Requirements
 ------------
