@@ -1,0 +1,30 @@
+---
+- name: Install Zend Debugger dependencies
+  sudo: yes
+  apt: name={{ item }} state=present
+  with_items:
+    - libssl0.9.8
+  notify: Restart Apache
+  tags:
+    - tooling
+    - debuggers
+
+- name: Download Zend Debugger
+  sudo: yes
+  script: zend.sh {{ php_mod_dir }} creates={{ php_mod_dir }}/ZendDebugger.so
+  tags:
+    - tooling
+    - debuggers
+
+- name: Configure Zend Debugger
+  sudo: yes
+  ini_file: option={{item.option}} value={{item.value}} section=zenddebugger dest={{ php_conf_dir }}/zend.ini
+  with_items:
+    - { option: zend_extension, value: "{{ php_mod_dir }}/ZendDebugger.so" }
+    - { option: zend_debugger.allow_hosts, value: "0.0.0.0/0" }
+    - { option: zend_debugger.expose_remotely, value: always }
+  tags:
+    - tooling
+    - debuggers
+
+#@todo for each vhost, copy the debugger.php file into it's root.

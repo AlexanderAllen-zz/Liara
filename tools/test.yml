@@ -1,0 +1,12 @@
+- name: Test role default variable
+  debug: msg="test role default variable":" {{ test_var_foo }}"
+
+- name: Test role regular variable
+  debug: msg="test role variable":" {{ apache_vhosts }}"
+
+- name: Test group variable
+  debug: msg="test group variable":" {{ group_baz_var }}"
+
+- name: Test iterator task
+  debug: msg="test iterator task":" {{ item.servername }}"
+  with_items: test_vars

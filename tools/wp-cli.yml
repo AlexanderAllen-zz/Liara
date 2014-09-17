@@ -1,0 +1,21 @@
+---
+- name: Download Wordpress CLI
+  sudo: yes
+  command: curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar creates=/usr/local/bin/wp chdir=/home/vagrant
+  tags:
+    - tooling
+    - wp-cli
+
+- name: Make Wordpress CLI Executable
+  sudo: yes
+  command: chmod +x wp-cli.phar chdir=/home/vagrant creates=/usr/local/bin/wp
+  tags:
+    - tooling
+    - wp-cli
+
+- name: Rename Wordpress CLI
+  sudo: yes
+  command: mv wp-cli.phar /usr/local/bin/wp creates=/usr/local/bin/wp chdir=/home/vagrant
+  tags:
+    - tooling
+    - wp-cli

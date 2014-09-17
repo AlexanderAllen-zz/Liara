@@ -1,2 +1,6 @@
 ---
-# defaults file for liara-private
+# defaults file for liara
+liara_new_relic_license: ""
+liara_php_conf_dir: "/etc/php5/conf.d"
+liara_php_mod_dir: "/usr/lib/php5/20090626"
+liara_apc_stats_webdir: ""

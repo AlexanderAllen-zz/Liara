@@ -1,2 +1,3 @@
 ---
-# handlers file for liara-private
+- name: Restart Apache
+  service: name=nginx state=restarted

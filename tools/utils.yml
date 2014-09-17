@@ -1,0 +1,9 @@
+---
+# uploadprogress is always recommended to be installed by Drupal.
+- name: Install uploadprogress
+  sudo: yes
+  command: pecl install uploadprogress creates=/usr/lib/php5/20090626/uploadprogress.so
+
+- name: Enable uploadprogress
+  sudo: yes
+  ini_file: option=extension value=uploadprogress.so section=uploadprogress dest={{ php_conf_dir }}/uploadprogress.ini
