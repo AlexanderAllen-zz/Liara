@@ -1,2 +1,8 @@
 ---
 # vars file for Liara
+
+# Target directory to where Composer will be installed.
+liara_composer_path: /usr/local/bin/composer
+
+# The directory where Composer downloads dependencies to.
+liara_composer_user_dir: /home/vagrant/.composer/vendor/bin

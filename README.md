@@ -19,7 +19,6 @@ Required global variables:
 Optional global variables:
 
  - liara_new_relic_license: The key for your New Relic account. If present New Relic will be enabled.
- - liara_apc_stats_webdir: If present, an HTML file for monitoring APC will be placed here.
 
 If you are using Vagrant, you can set these through your Vagrantfile, otherwise, you can set them in defaults/main.yml.
 
@@ -31,11 +30,17 @@ A list of other roles hosted on Galaxy should go here, plus any details in regar
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: all
+    - hosts: webservers
       roles:
-         - { role: tooling, x: 42 }
+         - {
+                role: AlexanderAllen.Liara,
+                liara_new_relic_license: "1245abcdf9",
+                liara_project: "my new relic project name",
+                liara_php_conf_dir: "/etc/php5/conf.d",
+                liara_php_mod_dir: "/usr/lib/php5/20090626",
+                liara_temp_dir: "tmp",
+                liara_project: "My Vagrant Project"
+            }
 
 License
 -------
