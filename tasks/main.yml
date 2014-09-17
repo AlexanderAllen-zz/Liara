@@ -1,7 +1,8 @@
 ---
-- name: Install Tool Dependencies
+- name: Install Ubuntu dependencies
   sudo: yes
-  apt: name={{ item }} state=present
+  yum: name={{ item }} state=installed
+  when: ansible_os_family == 'Ubuntu'
   with_items:
     - git
     - make
@@ -15,8 +16,6 @@
     - php-pear
     # Required by opcode.yml/APC
     - libpcre3-dev
-  tags:
-    - tooling
 
 - name: Create temporary directory
   file: state=directory path={{ liara_temp_dir }}
