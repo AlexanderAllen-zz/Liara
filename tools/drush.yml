@@ -1,0 +1,6 @@
+---
+- name: Install Drush
+  command: composer global require drush/drush:dev-master creates=/home/vagrant/.composer/vendor/bin/drush
+  tags:
+    - tooling
+    - drush

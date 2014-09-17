@@ -1,0 +1,32 @@
+# File:
+# Ansible task file for common QA tools.
+# Installing Behat globally allows developers to have a central repository with test,
+# as opposed to having to checkout Behat on a per-project basis.
+---
+- name: Download Behat
+  command: composer global require behat/behat:\>3.0 creates=/home/vagrant/.composer/vendor/bin/behat
+  tags:
+    - tooling
+    - qa
+
+- name: Download Mink
+  command: composer global require behat/mink:* creates=/home/vagrant/.composer/vendor/behat/mink/src/Behat/Mink/
+  tags:
+    - tooling
+    - qa
+
+- name: Download Mink Drivers
+  command: composer global require behat/{{ item }}:* creates=/home/vagrant/.composer/vendor/behat/{{ item }}
+  tags:
+    - tooling
+    - qa
+  with_items:
+    - mink-zombie-driver
+    - mink-selenium2-driver
+    - mink-goutte-driver
+
+- name: Download PHPSpec
+  command: composer global require phpspec/phpspec:* creates=/home/vagrant/.composer/vendor/phpspec
+  tags:
+    - tooling
+    - qa

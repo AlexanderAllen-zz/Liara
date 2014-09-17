@@ -1,0 +1,58 @@
+---
+- name: Install APC
+  sudo: yes
+  shell: yes '' | pecl install -f apc creates=/usr/lib/php5/20090626/apc.so
+
+- name: Enable APC
+  sudo: yes
+  ini_file: option=extension value=apc.so section=APC dest={{ php_conf_dir }}/apc.ini
+  notify: Restart Apache
+
+#- name: Setup APC stats monitoring
+#  sudo: yes
+#  command: cp /usr/share/php/apc.php {{ apc_stats_webdir }}/apc.php
+
+
+  # The default shared memory size is 32M.
+  # Increasing shm_size to 48M+ decreases or eliminates fragmentation,
+  # and drastically reduces page execution time!!!
+  #
+  # See http://php.net/manual/en/apc.configuration.php
+  # For all of APCs configuration options.
+  #
+- name: Optimize APC for development
+  sudo: yes
+  ini_file: option={{item.option}} value={{item.value}} section=APC dest={{ php_conf_dir }}/apc.ini
+  notify: Restart Apache
+  with_items:
+    # Optimize APC shared memory size from 32M to 64M.
+    - { option: apc.shm_size, value: 64 }
+    # This is the default number of segments, benchmark and optimize if needed.
+    - { option: apc.shm_segments, value: 1 }
+    # Lazy loading is sorta superceded by PSR-X autoloading, not sure what will be the impact of
+    # the increased algorithm complexity at the APC level.
+    - { option: apc.include_once_override, value: no }
+    - { option: apc.lazy_functions, value: 0 }
+    - { option: apc.lazy_classes, value: 0 }
+    - { option: apc.file_md5, value: no }
+    # Logs any scripts that were automatically excluded from being cached due to early/late binding issues.
+    - { option: apc.report_autofilter, value: yes }
+    # Should always be enabled on development servers.
+    # Disable on production only if you know what are the implications and have the
+    # infrastructure setup to automatically clear APC on deployments.
+    - { option: apc.stat, value: 1 }
+    - { option: apc.enable_cli, value: 1 }
+    # By default slam defense is "on".
+    - { option: apc.slam_defense, value: 1 }
+
+# Production settings.
+# Disables the stat check (PHP files are not checked for changes), and expires files about once
+# a day. Would require doing a graceful apache restart to flush APC.
+#apc.enabled = 1
+#apc.shm_size=256
+#apc.shm_segments = 1
+#apc.stat = 0
+#apc.ttl=0
+#apc.user_ttl=7200
+#apc.gc_ttl=3600
+

@@ -1,0 +1,30 @@
+---
+- name: Install Composer
+  sudo: yes
+  shell: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin creates=/usr/local/bin/composer
+  tags:
+    - tooling
+    - composer
+
+- name: Rename Composer Executable
+  sudo: yes
+  shell: mv /usr/local/bin/composer.phar /usr/local/bin/composer creates=/usr/local/bin/composer
+  tags:
+    - tooling
+    - composer
+
+- name: Make Composer Executable
+  sudo: yes
+  command: chmod a+x /usr/local/bin/composer creates=/usr/local/bin/composer
+  tags:
+    - tooling
+    - composer
+
+- name: Update PATH With Composer
+  sudo: yes
+  tags:
+    - tooling
+    - composer
+  lineinfile: regexp='PATH=(["]*)((?!.*?{{item}}).*?)(["]*)$' line="PATH=\1\2:{{item}}\3" dest=/etc/environment backrefs=yes
+  with_items:
+    - /home/vagrant/.composer/vendor/bin

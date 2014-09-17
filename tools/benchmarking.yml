@@ -1,0 +1,63 @@
+---
+- name: Add New Relic repository
+  sudo: yes
+  #command: 'echo deb http://apt.newrelic.com/debian/ newrelic non-free >> /etc/apt/sources.list.d/newrelic.list'
+  apt_repository: repo='deb http://apt.newrelic.com/debian newrelic non-free' state=present
+
+- name: Authenticate New Relic repository
+  sudo: yes
+  apt_key: url=https://download.newrelic.com/548C16BF.gpg state=present validate_certs=no
+
+- name: Update Apt
+  sudo: yes
+  apt: update_cache=yes
+
+- name: Install New Relic package
+  sudo: yes
+  apt: name=newrelic-php5 state=present
+
+- name: Configure New Relic
+  sudo: yes
+  ini_file: option={{item.option}} value={{item.value}} section=newrelic dest={{ php_conf_dir }}/newrelic.ini
+  notify: Restart Apache
+  with_items:
+    - { option: newrelic.enabled, value: true }
+    - { option: newrelic.license, value: "{{ NEW_RELIC_LICENSE_KEY }}" }
+    - { option: newrelic.appname, value: "{{ project_name }}" }
+  tags:
+    - tooling
+    - benchmarking
+
+  # Valgrind/massif, low level memory profiler.
+- name: Download Valgrind source
+  command: wget http://valgrind.org/downloads/valgrind-3.9.0.tar.bz2 chdir=/home/vagrant creates=/usr/local/bin/valgrind
+
+- name: Extract Valgrind
+  command: tar -xjf valgrind-3.9.0.tar.bz2 chdir=/home/vagrant creates=/usr/local/bin/valgrind
+
+- name: Compile Valgrind source
+  sudo: yes
+  shell: ./configure && make chdir=/home/vagrant/valgrind-3.9.0 creates=/usr/local/bin/valgrind
+
+- name: Install Valgrind
+  sudo: yes
+  command: make install chdir=/home/vagrant/valgrind-3.9.0 creates=/usr/local/bin/valgrind
+
+  # Ext/Memprof PHP Extension
+  # Install dependencies first.
+- name: Download Judy dependency for Memprof
+  command: wget http://sourceforge.net/projects/judy/files/judy/Judy-1.0.5/Judy-1.0.5.tar.gz chdir=/home/vagrant/tmp creates=/usr/local/include/Judy.h
+
+- name: Extract Judy dependency
+  command: tar -xzf Judy-1.0.5.tar.gz chdir=/home/vagrant/tmp creates=/usr/local/include/Judy.h
+
+- name: Compile Judy dependency
+  shell: cd /home/vagrant/tmp/judy-1.0.5 && ./configure && make creates=/usr/local/include/Judy.h
+
+- name: Install Memprof
+  sudo: yes
+  command: pecl install memprof creates={{ php_mod_dir }}/memprof.so
+
+- name: Enable Memprof
+  sudo: yes
+  ini_file: option=extension value=memprof.so section=memprof dest={{ php_conf_dir }}/memprof.ini
