@@ -19,7 +19,7 @@
     - tooling
 
 - name: Create temporary directory
-  file: state=directory path=/home/vagrant/tmp
+  file: state=directory path={{ liara_temp_dir }}
 
 - include: ../tools/composer.yml
 - include: ../tools/drush.yml
@@ -33,4 +33,4 @@
 - include: ../tools/utils.yml
 
 - name: Cleanup all temporary files
-  command: rm -rf /home/vagrant/tmp
+  command: rm -rf {{ liara_temp_dir }}
