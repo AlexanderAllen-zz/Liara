@@ -11,7 +11,17 @@ Any pre-requisites that may not be covered by Ansible itself or the role should 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+Required global variables:
+
+ - liara_php_conf_dir: The dynamic *.ini include directory of your PHP install. For example: "/etc/php5/conf.d".
+ - liara_php_mod_dir: The directory where your PHP *.so extension files are located. For example: "/usr/lib/php5/20090626".
+
+Optional global variables:
+
+ - liara_new_relic_license: The key for your New Relic account. If present New Relic will be enabled.
+ - liara_apc_stats_webdir: If present, an HTML file for monitoring APC will be placed here.
+
+If you are using Vagrant, you can set these through your Vagrantfile, otherwise, you can set them in defaults/main.yml.
 
 Dependencies
 ------------
@@ -23,16 +33,16 @@ Example Playbook
 
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
-    - hosts: servers
+    - hosts: all
       roles:
-         - { role: username.rolename, x: 42 }
+         - { role: tooling, x: 42 }
 
 License
 -------
 
-BSD
+GPLv2
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+https://github.com/AlexanderAllen
