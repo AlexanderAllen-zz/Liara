@@ -1,25 +1,26 @@
 ---
 - name: Install Composer
   sudo: yes
-  shell: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin creates=/usr/local/bin/composer
+  shell: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin creates={{ liara_composer_path }}
   tags:
     - tooling
     - composer
 
 - name: Rename Composer Executable
   sudo: yes
-  shell: mv /usr/local/bin/composer.phar /usr/local/bin/composer creates=/usr/local/bin/composer
+  shell: mv /usr/local/bin/composer.phar {{ liara_composer_path }} creates={{ liara_composer_path }}
   tags:
     - tooling
     - composer
 
 - name: Make Composer Executable
   sudo: yes
-  command: chmod a+x /usr/local/bin/composer creates=/usr/local/bin/composer
+  command: chmod a+x {{ liara_composer_path }} creates={{ liara_composer_path }}
   tags:
     - tooling
     - composer
 
+# Make binaries downloaded by Composer directly available to interactive and headless shells.
 - name: Update PATH With Composer
   sudo: yes
   tags:
@@ -27,4 +28,4 @@
     - composer
   lineinfile: regexp='PATH=(["]*)((?!.*?{{item}}).*?)(["]*)$' line="PATH=\1\2:{{item}}\3" dest=/etc/environment backrefs=yes
   with_items:
-    - /home/vagrant/.composer/vendor/bin
+    - {{ liara_composer_user_dir }}
