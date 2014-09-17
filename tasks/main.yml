@@ -6,7 +6,6 @@
   with_items:
     - git
     - make
-    # Required by GNU C -> Memprof
     - binutils
     - texinfo
     - gawk
@@ -14,8 +13,6 @@
     - autoconf
     - build-essential
     - php-pear
-    # Required by opcode.yml/APC
-    - libpcre3-dev
 
 - name: Create temporary directory
   file: state=directory path={{ liara_temp_dir }}
