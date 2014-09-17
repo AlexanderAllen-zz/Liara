@@ -20,16 +20,5 @@
 - name: Create temporary directory
   file: state=directory path={{ liara_temp_dir }}
 
-- include: ../tools/composer.yml
-- include: ../tools/drush.yml
-- include: ../tools/wp-cli.yml
-- include: ../tools/zend_debugger.yml
-- include: ../tools/standards.yml
-- include: ../tools/qa.yml
-- include: ../tools/benchmarking.yml
-  when: NEW_RELIC_LICENSE_KEY != ""
-- include: ../tools/opcode.yml
-- include: ../tools/utils.yml
-
 - name: Cleanup all temporary files
   command: rm -rf {{ liara_temp_dir }}
