@@ -14,8 +14,5 @@
     - build-essential
     - php-pear
 
-- name: Create temporary directory
+- name: Ensure temporary directory exists
   file: state=directory path={{ liara_temp_dir }}
-
-- name: Cleanup all temporary files
-  command: rm -rf {{ liara_temp_dir }}

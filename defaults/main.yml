@@ -5,4 +5,4 @@ liara_php_conf_dir: "/etc/php5/conf.d"
 liara_php_mod_dir: "/usr/lib/php5/20090626"
 liara_apc_stats_webdir: ""
 liara_temp_dir: "tmp"
-liara_project: {{ project_name | default("Liara") }}
+liara_project: "{{ project_name | default(\"Liara\") }}"
